@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main {
+    flex: 1;
+    margin-left: 260px;
+    /* Sidebar width */
+    padding: 2rem;
+    background-color: var(--background);
+    transition: margin-left 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .main {
+        margin-left: 0;
+    }
+}
