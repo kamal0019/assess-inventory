@@ -40,13 +40,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
     }, []);
 
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
     // Login function
     const login = async (email: string, password: string, token?: string) => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const res = await fetch("http://localhost:5000/api/auth/login", {
+            const res = await fetch(`${BASE_URL}/api/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -85,7 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const enable2FA = async () => {
         const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).token : '';
-        const res = await fetch("http://localhost:5000/api/auth/2fa/generate", {
+        const res = await fetch(`${BASE_URL}/api/auth/2fa/generate`, {
             method: "POST",
             headers: { "Authorization": `Bearer ${token}` }
         });
@@ -94,7 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const verify2FA = async (otp: string) => {
         const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).token : '';
-        const res = await fetch("http://localhost:5000/api/auth/2fa/verify", {
+        const res = await fetch(`${BASE_URL}/api/auth/2fa/verify`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -107,7 +109,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const disable2FA = async () => {
         const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).token : '';
-        const res = await fetch("http://localhost:5000/api/auth/2fa/disable", {
+        const res = await fetch(`${BASE_URL}/api/auth/2fa/disable`, {
             method: "POST",
             headers: { "Authorization": `Bearer ${token}` }
         });

@@ -1,5 +1,11 @@
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export const authFetch = async (url: string, options: RequestInit = {}) => {
     let token = null;
+
+    // Construct full URL if it's a relative path
+    const fullUrl = url.startsWith('http') ? url : `${BASE_URL}${url}`;
+
     if (typeof window !== 'undefined') {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
@@ -18,16 +24,30 @@ export const authFetch = async (url: string, options: RequestInit = {}) => {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
 
-    const response = await fetch(url, {
-        ...options,
-        headers,
-    });
+    try {
+        const response = await fetch(fullUrl, {
+            ...options,
+            headers,
+        });
 
-    if (response.status === 401) {
-        // Optional: Redirect to login or handle session expiration
-        console.error('Unauthorized access - redirecting to login?');
-        // window.location.href = '/login'; // Uncomment if you want auto-redirect
+        if (response.status === 401) {
+            // Optional: Redirect to login or handle session expiration
+            console.error('Unauthorized access - redirecting to login?');
+            // window.location.href = '/login'; // Uncomment if you want auto-redirect
+        }
+
+        return response;
+    } catch (error) {
+        console.error('Network Error:', error);
+        throw error;
     }
+};
 
-    return response;
+if (response.status === 401) {
+    // Optional: Redirect to login or handle session expiration
+    console.error('Unauthorized access - redirecting to login?');
+    // window.location.href = '/login'; // Uncomment if you want auto-redirect
+}
+
+return response;
 };
