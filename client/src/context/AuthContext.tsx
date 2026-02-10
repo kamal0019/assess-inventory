@@ -10,6 +10,8 @@ interface User {
     token: string;
     department?: string;
     designation?: string;
+    role?: string;
+    is2FAEnabled?: boolean;
 }
 
 interface AuthContextType {
@@ -21,6 +23,7 @@ interface AuthContextType {
     enable2FA: () => Promise<any>;
     verify2FA: (otp: string) => Promise<any>;
     disable2FA: () => Promise<any>;
+    updateUser: (userData: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,6 +44,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+    const updateUser = (userData: Partial<User>) => {
+        setUser(prev => {
+            if (!prev) return null;
+            const updated = { ...prev, ...userData };
+            localStorage.setItem("user", JSON.stringify(updated));
+            return updated;
+        });
+    };
 
     // Login function
     const login = async (email: string, password: string, token?: string) => {
@@ -125,7 +137,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isLoading, error, enable2FA, verify2FA, disable2FA }}>
+        <AuthContext.Provider value={{ user, login, logout, isLoading, error, enable2FA, verify2FA, disable2FA, updateUser }}>
             {children}
         </AuthContext.Provider>
     );
