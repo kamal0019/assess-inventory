@@ -10,7 +10,8 @@ const AdminSchema = new mongoose.Schema({
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     twoFactorSecret: { type: String }, // For storing TOTP secret
-    isTwoFactorEnabled: { type: Boolean, default: false } // To track if 2FA is active
+    isTwoFactorEnabled: { type: Boolean, default: false }, // To track if 2FA is active
+    role: { type: String, default: 'Admin' }
 }, { timestamps: true });
 AdminSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
