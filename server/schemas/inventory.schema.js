@@ -6,7 +6,7 @@ const createItemSchema = z.object({
         category: z.string({ required_error: 'Category is required' }),
         make: z.string().optional(),
         serialNumber: z.string({ required_error: 'Serial number is required' }),
-        quantity: z.number({ required_error: 'Quantity is required' }).min(1, 'Quantity must be at least 1'),
+        quantity: z.coerce.number({ required_error: 'Quantity is required' }).min(1, 'Quantity must be at least 1'),
         location: z.string().optional(),
         primaryRemarks: z.string().optional(),
         secondaryRemarks: z.string().optional(),
