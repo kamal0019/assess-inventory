@@ -43,11 +43,4 @@ export const authFetch = async (url: string, options: RequestInit = {}) => {
     }
 };
 
-if (response.status === 401) {
-    // Optional: Redirect to login or handle session expiration
-    console.error('Unauthorized access - redirecting to login?');
-    // window.location.href = '/login'; // Uncomment if you want auto-redirect
-}
 
-return response;
-};
