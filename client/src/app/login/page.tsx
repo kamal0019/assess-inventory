@@ -185,7 +185,7 @@ export default function LoginPage() {
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
                                         style={inputStyle}
-                                        placeholder="admin@assessinfra.com"
+                                        placeholder=""
                                     />
                                 </div>
                                 <div style={{ position: 'relative' }}>
@@ -196,7 +196,7 @@ export default function LoginPage() {
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                         style={inputStyle}
-                                        placeholder="• • • • • • • •"
+                                        placeholder=""
                                     />
                                     <button
                                         type="button"
