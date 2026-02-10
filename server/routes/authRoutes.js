@@ -63,7 +63,8 @@ router.post('/login', validateResource(loginSchema), async (req, res) => {
                 _id: admin.id,
                 name: admin.name,
                 email: admin.email,
-                role: 'Admin', // Hardcoded since only admins use this
+                role: 'Admin',
+                is2FAEnabled: admin.isTwoFactorEnabled,
                 token: generateToken(admin._id),
             });
         } else {
@@ -252,6 +253,7 @@ router.post('/2fa/validate', async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: 'Admin',
+                is2FAEnabled: user.isTwoFactorEnabled,
                 token: generateToken(user._id),
             });
         } else {
