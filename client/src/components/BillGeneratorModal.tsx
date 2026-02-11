@@ -96,6 +96,10 @@ export default function BillGeneratorModal({ recipientName, recipientType, recip
 
         const doc = new jsPDF();
 
+        // Format date to DD-MM-YYYY
+        const [year, month, day] = billDate.split('-');
+        const formattedDate = `${day}-${month}-${year}`;
+
         // --- Header ---
         // Removed dark rect
 
@@ -182,7 +186,7 @@ export default function BillGeneratorModal({ recipientName, recipientType, recip
 
         doc.setTextColor(0, 0, 0); // Black text
         doc.setFontSize(10);
-        doc.text(`From Assessinfra Technology, with No defect on (${billDate}) for Office Use Purpose.`, 14, finalY);
+        doc.text(`From Assessinfra Technology, with No defect on (${formattedDate}) for Office Use Purpose.`, 14, finalY);
 
         // Signatures
         const sigY = finalY + 30;
@@ -195,7 +199,7 @@ export default function BillGeneratorModal({ recipientName, recipientType, recip
         doc.setFont('helvetica', 'bold');
         doc.text(`Name: - ${verifierName}`, 14, sigY + 15);
         doc.setFont('helvetica', 'normal');
-        doc.text(`Date: - ${billDate}`, 14, sigY + 22);
+        doc.text(`Date: - ${formattedDate}`, 14, sigY + 22);
         doc.text(`Place: - Assessinfra Technology`, 14, sigY + 29);
         doc.text(`Contact No.:- 9636872742`, 14, sigY + 36);
 
@@ -206,7 +210,7 @@ export default function BillGeneratorModal({ recipientName, recipientType, recip
         doc.setFont('helvetica', 'bold');
         doc.text(`Name:- ${recipientName}`, 130, sigY + 15);
         doc.setFont('helvetica', 'normal');
-        doc.text(`Date:- ${billDate}`, 130, sigY + 22);
+        doc.text(`Date:- ${formattedDate}`, 130, sigY + 22);
         doc.text(`Place:- Assessinfra Technology`, 130, sigY + 29);
         doc.text(`Contact No.:- ${recipientContact || ''}`, 130, sigY + 36);
 
