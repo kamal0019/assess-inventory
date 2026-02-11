@@ -2,9 +2,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import TwoFactorModal from '@/components/TwoFactorModal';
+import ChangePasswordModal from '@/components/ChangePasswordModal';
 
 export default function SettingsPage() {
     const [is2FAModalOpen, setIs2FAModalOpen] = useState(false);
+    const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
     const [qrCodeUrl, setQrCodeUrl] = useState('');
     const [secret, setSecret] = useState('');
     const { enable2FA, verify2FA, disable2FA, user, updateUser } = useAuth();
@@ -144,14 +146,22 @@ export default function SettingsPage() {
                         </div>
 
                         <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-                            <button style={{
-                                backgroundColor: 'transparent',
-                                border: '1px solid var(--border)',
-                                padding: '0.5rem 1rem',
-                                borderRadius: 'var(--radius)',
-                                cursor: 'pointer',
-                                fontSize: '0.875rem'
-                            }}>
+                            <button
+                                onClick={() => setIsChangePasswordModalOpen(true)}
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    border: '1px solid var(--border)',
+                                    color: 'var(--text-main)',
+                                    padding: '0.625rem 1.25rem',
+                                    borderRadius: 'var(--radius)',
+                                    cursor: 'pointer',
+                                    fontSize: '0.875rem',
+                                    fontWeight: 500,
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--text-main)'}
+                                onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                            >
                                 Change Password
                             </button>
                         </div>
@@ -169,6 +179,11 @@ export default function SettingsPage() {
                 qrCodeUrl={qrCodeUrl}
                 secret={secret}
                 onVerify={handleVerify2FA}
+            />
+
+            <ChangePasswordModal
+                isOpen={isChangePasswordModalOpen}
+                onClose={() => setIsChangePasswordModalOpen(false)}
             />
         </div>
     );

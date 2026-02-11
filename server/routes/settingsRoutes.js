@@ -8,7 +8,15 @@ const bcrypt = require('bcryptjs');
 // @route   PUT /api/settings/profile
 router.put('/profile', protect, async (req, res) => {
     try {
-        const user = await Employee.findById(req.user._id);
+        let user;
+
+        // Check if user is Admin
+        if (req.user.role === 'Admin') {
+            const Admin = require('../models/Admin');
+            user = await Admin.findById(req.user._id);
+        } else {
+            user = await Employee.findById(req.user._id);
+        }
 
         if (user) {
             user.name = req.body.name || user.name;
