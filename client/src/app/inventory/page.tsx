@@ -25,12 +25,19 @@ export default function InventoryPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [showAddCategory, setShowAddCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
+    const [showFilterMenu, setShowFilterMenu] = useState(false);
+    const [filterLowStock, setFilterLowStock] = useState(false);
     const router = useRouter();
 
     const handleAddCategory = () => {
         if (newCategoryName.trim()) {
             router.push(`/inventory/${encodeURIComponent(newCategoryName.trim())}`);
         }
+    };
+
+    const toggleFilterLowStock = () => {
+        setFilterLowStock(!filterLowStock);
+        setShowFilterMenu(false);
     };
 
     useEffect(() => {
@@ -66,9 +73,11 @@ export default function InventoryPage() {
         }
     };
 
-    const filteredCategories = categories.filter(cat =>
-        cat.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredCategories = categories.filter(cat => {
+        const matchesSearch = cat.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesLowStock = filterLowStock ? cat.totalQuantity < 5 : true;
+        return matchesSearch && matchesLowStock;
+    });
 
     return (
         <DashboardLayout>
@@ -89,11 +98,67 @@ export default function InventoryPage() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button className={styles.filterButton}>
+                <div style={{ display: 'flex', gap: '1rem', position: 'relative' }}>
+                    <button
+                        className={styles.filterButton}
+                        onClick={() => setShowFilterMenu(!showFilterMenu)}
+                        style={{
+                            background: filterLowStock ? 'var(--primary)' : 'var(--surface)',
+                            color: filterLowStock ? 'white' : 'var(--text-main)'
+                        }}
+                    >
                         <Filter size={20} />
                         Filter
                     </button>
+
+                    {showFilterMenu && (
+                        <div style={{
+                            position: 'absolute',
+                            top: '100%',
+                            right: '150px', // Adjust based on button position
+                            marginTop: '0.5rem',
+                            background: 'var(--surface)',
+                            border: '1px solid var(--border)',
+                            borderRadius: 'var(--radius)',
+                            boxShadow: 'var(--shadow-lg)',
+                            zIndex: 10,
+                            minWidth: '200px',
+                            padding: '0.5rem'
+                        }}>
+                            <div style={{ padding: '0.5rem', fontWeight: 600, borderBottom: '1px solid var(--border)', marginBottom: '0.5rem' }}>Stock</div>
+                            <div
+                                onClick={toggleFilterLowStock}
+                                style={{
+                                    padding: '0.5rem',
+                                    cursor: 'pointer',
+                                    borderRadius: 'var(--radius)',
+                                    background: filterLowStock ? 'var(--background)' : 'transparent',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}
+                            >
+                                <span style={{
+                                    width: '16px',
+                                    height: '16px',
+                                    borderRadius: '50%',
+                                    border: '2px solid var(--warning)',
+                                    display: 'inline-block'
+                                }}></span>
+                                Low Stock Categories
+                            </div>
+
+                            {filterLowStock && (
+                                <div
+                                    onClick={() => { setFilterLowStock(false); setShowFilterMenu(false); }}
+                                    style={{ padding: '0.5rem', cursor: 'pointer', borderRadius: 'var(--radius)', color: 'var(--danger)', marginTop: '0.5rem', borderTop: '1px solid var(--border)' }}
+                                >
+                                    Clear Filters
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     <button
                         className={styles.filterButton}
                         style={{ background: 'var(--primary)', color: 'white', border: 'none' }}
