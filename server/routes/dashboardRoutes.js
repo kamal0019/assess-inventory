@@ -8,40 +8,53 @@ const { protect } = require('../middleware/authMiddleware');
 
 // @desc    Get dashboard statistics
 // @route   GET /api/dashboard/stats
+// @desc    Get dashboard statistics
+// @route   GET /api/dashboard/stats
 router.get('/stats', protect, async (req, res) => {
     try {
         const [
             totalItems,
-            lowStockItems,
-            issuedItems,
-            totalEmployees,
-            totalOutliners
+            lowStockCount,
+            totalIssued,
+            employeeCount,
+            outlinerCount,
+            categoryDistribution
         ] = await Promise.all([
-            InventoryItem.find({}),
-            InventoryItem.find({ quantity: { $lt: 5 } }),
-            InventoryItem.find({ status: 'Issued' }),
+            InventoryItem.countDocuments({}),
+            InventoryItem.countDocuments({ quantity: { $lt: 5 } }),
+            // Calculate total issued quantity using aggregation
+            InventoryItem.aggregate([
+                { $unwind: "$assignments" },
+                { $group: { _id: null, totalIssued: { $sum: "$assignments.quantity" } } }
+            ]),
             Employee.countDocuments({ role: { $ne: 'Admin' } }),
-            Outliner.countDocuments({})
+            Outliner.countDocuments({}),
+            // Aggregate category distribution for the chart
+            InventoryItem.aggregate([
+                { $group: { _id: "$category", quantity: { $sum: "$quantity" } } },
+                { $project: { name: "$_id", quantity: 1, _id: 0 } }
+            ])
         ]);
 
-        const totalQuantity = totalItems.reduce((acc, item) => acc + (item.quantity || 0), 0);
-        // Calculate issued quantity from assignments array
-        const totalIssued = totalItems.reduce((acc, item) => {
-            const assigned = (item.assignments || []).reduce((sum, a) => sum + (a.quantity || 0), 0);
-            return acc + assigned;
-        }, 0);
+        // Calculate total stock quantity (sum of all item quantities)
+        const TotalStockAggregation = await InventoryItem.aggregate([
+            { $group: { _id: null, totalQuantity: { $sum: "$quantity" } } }
+        ]);
 
-        const availableStock = totalQuantity - totalIssued;
+        const totalQuantity = TotalStockAggregation.length > 0 ? TotalStockAggregation[0].totalQuantity : 0;
+        const issuedQuantity = totalIssued.length > 0 ? totalIssued[0].totalIssued : 0;
+        const availableStock = totalQuantity - issuedQuantity;
 
         res.json({
             success: true,
             data: {
                 totalQuantity,
                 availableStock,
-                totalIssued,
-                lowStockCount: lowStockItems.length,
-                employeeCount: totalEmployees,
-                outlinerCount: totalOutliners
+                totalIssued: issuedQuantity,
+                lowStockCount,
+                employeeCount,
+                outlinerCount,
+                chartData: categoryDistribution // Send chart data directly from backend
             }
         });
     } catch (error) {

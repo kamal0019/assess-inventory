@@ -45,12 +45,15 @@ export default function Home() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      // 1. Fetch Stats
+      // 1. Fetch Stats (includes chart data now)
       const statsRes = await authFetch('/api/dashboard/stats');
       const statsData = await statsRes.json();
 
       if (statsData.success) {
         setStats(statsData.data);
+        if (statsData.data.chartData) {
+          setChartData(statsData.data.chartData);
+        }
       }
 
       // 2. Fetch Activity
@@ -58,24 +61,6 @@ export default function Home() {
       const activityData = await activityRes.json();
       if (activityData.success) {
         setActivities(activityData.data);
-      }
-
-      // 3. Fetch Inventory for Chart (Visual distribution)
-      const invRes = await authFetch('/api/inventory');
-      const invData = await invRes.json();
-
-      if (invData.success) {
-        const items: any[] = invData.data;
-        const categoryMap: { [key: string]: number } = {};
-        items.forEach(item => {
-          const cat = item.category || 'Other';
-          categoryMap[cat] = (categoryMap[cat] || 0) + (item.quantity || 0);
-        });
-        const newChartData = Object.keys(categoryMap).map(key => ({
-          name: key,
-          quantity: categoryMap[key]
-        }));
-        setChartData(newChartData);
       }
 
     } catch (error) {
