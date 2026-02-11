@@ -54,6 +54,15 @@ const Sidebar = () => {
                     <LogOut size={20} />
                     Logout
                 </button>
+                <div style={{
+                    marginTop: '1rem',
+                    fontSize: '0.7rem',
+                    color: 'var(--text-secondary)',
+                    textAlign: 'center',
+                    opacity: 0.7
+                }}>
+                    © 2026 All Rights Reserved<br />KP Inventory
+                </div>
             </div>
         </aside>
     );
