@@ -142,6 +142,7 @@ export default function OutlinerDetailsPage({ params }: { params: Promise<{ id: 
                     recipientName={outliner.name}
                     recipientId={outliner._id}
                     recipientType="Outliner"
+                    recipientContact={outliner.contact}
                     issuedItems={outliner.issuedItems || []}
                     onClose={() => setShowBillModal(false)}
                 />
@@ -152,6 +153,7 @@ export default function OutlinerDetailsPage({ params }: { params: Promise<{ id: 
                     recipientName={outliner.name}
                     recipientId={outliner._id}
                     recipientType="Outliner"
+                    recipientContact={outliner.contact}
                     issuedItems={outliner.issuedItems || []}
                     onClose={() => setShowBulkBillModal(false)}
                 />

@@ -19,11 +19,12 @@ interface BillGeneratorModalProps {
     recipientName: string;
     recipientId: string;
     recipientType: string;
+    recipientContact?: string;
     issuedItems: IssuedItem[];
     onClose: () => void;
 }
 
-export default function BillGeneratorModal({ recipientName, recipientType, recipientId, issuedItems, onClose }: BillGeneratorModalProps) {
+export default function BillGeneratorModal({ recipientName, recipientType, recipientId, recipientContact, issuedItems, onClose }: BillGeneratorModalProps) {
     const [selectedItems, setSelectedItems] = useState(
         issuedItems.map(item => ({
             ...item,
@@ -60,10 +61,7 @@ export default function BillGeneratorModal({ recipientName, recipientType, recip
     };
 
     const generatePDF = async () => {
-        // Save to DB first ... (omitted for brevity in replacement, focusing on PDF generation part)
-        // actually I need to keep the save logic. I will only target the pdf generation part.
-
-        // ... (save logic remains) ...
+        // Save to DB first
         try {
             const itemsToSave = selectedItems.filter(item => item.selected);
             const total = calculateTotal();
@@ -206,11 +204,11 @@ export default function BillGeneratorModal({ recipientName, recipientType, recip
         doc.text(`Received By: -`, 150, sigY + 5);
 
         doc.setFont('helvetica', 'bold');
-        doc.text(`Name:-`, 130, sigY + 15); // Leave blank for signature
+        doc.text(`Name:- ${recipientName}`, 130, sigY + 15);
         doc.setFont('helvetica', 'normal');
         doc.text(`Date:- ${billDate}`, 130, sigY + 22);
         doc.text(`Place:- Assessinfra Technology`, 130, sigY + 29);
-        doc.text(`Contact No.:-`, 130, sigY + 36);
+        doc.text(`Contact No.:- ${recipientContact || ''}`, 130, sigY + 36);
 
         doc.save(`${recipientName}_Bill_${billDate}.pdf`);
     };

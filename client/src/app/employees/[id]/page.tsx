@@ -142,6 +142,7 @@ export default function EmployeeDetailsPage({ params }: { params: Promise<{ id: 
                     recipientName={employee.name}
                     recipientId={employee._id}
                     recipientType="Employee"
+                    recipientContact={employee.contact}
                     issuedItems={employee.issuedItems}
                     onClose={() => setShowBillModal(false)}
                 />
@@ -152,6 +153,7 @@ export default function EmployeeDetailsPage({ params }: { params: Promise<{ id: 
                     recipientName={employee.name}
                     recipientId={employee._id}
                     recipientType="Employee"
+                    recipientContact={employee.contact}
                     issuedItems={employee.issuedItems}
                     onClose={() => setShowBulkBillModal(false)}
                 />

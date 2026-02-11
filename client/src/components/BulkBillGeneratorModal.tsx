@@ -19,6 +19,7 @@ interface BillGeneratorModalProps {
     recipientName: string;
     recipientId: string;
     recipientType: 'Employee' | 'Outliner';
+    recipientContact?: string;
     issuedItems: IssuedItem[];
     onClose: () => void;
 }
@@ -35,7 +36,7 @@ interface GroupedItem {
     originalItems: IssuedItem[]; // Keep track of which items are in this group
 }
 
-export default function BulkBillGeneratorModal({ recipientName, recipientId, recipientType, issuedItems, onClose }: BillGeneratorModalProps) {
+export default function BulkBillGeneratorModal({ recipientName, recipientId, recipientType, recipientContact, issuedItems, onClose }: BillGeneratorModalProps) {
     // Group items on init
     const initialGroups = useMemo(() => {
         const groups: { [key: string]: GroupedItem } = {};
@@ -325,11 +326,11 @@ export default function BulkBillGeneratorModal({ recipientName, recipientId, rec
         doc.text(`Received By: -`, 150, sigY + 5);
 
         doc.setFont('helvetica', 'bold');
-        doc.text(`Name:-`, 130, sigY + 15);
+        doc.text(`Name:- ${recipientName}`, 130, sigY + 15);
         doc.setFont('helvetica', 'normal');
         doc.text(`Date:- ${billDate}`, 130, sigY + 22);
         doc.text(`Place:- Assessinfra Technology`, 130, sigY + 29);
-        doc.text(`Contact No.:-`, 130, sigY + 36);
+        doc.text(`Contact No.:- ${recipientContact || ''}`, 130, sigY + 36);
 
         doc.save(`${recipientName}_BulkBill_${billDate}.pdf`);
 
