@@ -10,10 +10,72 @@
     padding: 2rem;
     background-color: var(--background);
     transition: margin-left 0.3s ease;
+    width: 100%;
+    /* Ensure it takes full width */
+}
+
+.mobileHeader {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+    z-index: 40;
+    padding: 0 1rem;
+    align-items: center;
+}
+
+.logoAndMenu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.menuButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobileLogo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--primary);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 45;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.overlayOpen {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 @media (max-width: 768px) {
     .main {
         margin-left: 0;
+        padding-top: 80px;
+        /* Space for mobile header */
+    }
+
+    .mobileHeader {
+        display: flex;
     }
 }

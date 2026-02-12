@@ -4,9 +4,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Package, FileText, Settings, LogOut, Users } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { X } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
-const Sidebar = () => {
+interface SidebarProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     const pathname = usePathname();
     const { logout } = useAuth();
 
@@ -25,10 +31,15 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className={styles.sidebar}>
-            <div className={styles.logo}>
-                <Package size={28} />
-                <span>AssessInventory</span>
+        <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
+            <div className={styles.logoHeader}>
+                <div className={styles.logo}>
+                    <Package size={28} />
+                    <span>AssessInventory</span>
+                </div>
+                <button className={styles.closeButton} onClick={onClose}>
+                    <X size={24} />
+                </button>
             </div>
             <nav className={styles.nav}>
                 {navItems.map((item) => {
@@ -38,6 +49,7 @@ const Sidebar = () => {
                             key={item.href}
                             href={item.href}
                             className={`${styles.navItem} ${isActive ? styles.active : ''}`}
+                            onClick={onClose}
                         >
                             <item.icon size={20} />
                             {item.name}
