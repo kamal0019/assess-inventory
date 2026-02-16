@@ -111,7 +111,7 @@ export default function BillGeneratorModal({ recipientName, recipientType, recip
         doc.setTextColor(0, 0, 0); // Black color for rest
         doc.setFontSize(12);
         doc.setFont('helvetica', 'normal');
-        doc.text('I Am Here by that, I am Receiving', 14, 30);
+        doc.text(`I Am ${recipientName} Here by that, I am Receiving,`, 14, 30);
 
         // --- Table ---
         const tableBody = selectedItems

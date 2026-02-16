@@ -233,7 +233,7 @@ export default function BulkBillGeneratorModal({ recipientName, recipientId, rec
         doc.setTextColor(0, 0, 0); // Black color
         doc.setFontSize(12);
         doc.setFont('helvetica', 'normal');
-        doc.text('I Am Here by that, I am Receiving', 14, 30);
+        doc.text(`I Am ${recipientName} Here by that, I am Receiving,`, 14, 30);
 
         // --- Table ---
         const tableBody = itemsToProcess.map((item, index) => {

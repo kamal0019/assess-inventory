@@ -123,6 +123,10 @@ export default function EmployeesPage() {
                 };
 
                 if (newEmp.name && newEmp.employeeId && newEmp.email) {
+                    if (!newEmp.password) {
+                        delete (newEmp as any).password;
+                    }
+
                     try {
                         const res = await authFetch('/api/employees', {
                             method: 'POST',
@@ -156,10 +160,15 @@ export default function EmployeesPage() {
             const url = editingId ? `/api/employees/${editingId}` : '/api/employees';
             const method = editingId ? 'PUT' : 'POST';
 
+            const payload = { ...newEmployee };
+            if (!payload.password) {
+                delete (payload as any).password;
+            }
+
             const res = await authFetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newEmployee)
+                body: JSON.stringify(payload)
             });
 
             if (!res.ok) {

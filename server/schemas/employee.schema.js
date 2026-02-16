@@ -3,6 +3,7 @@ const { z } = require('zod');
 const createEmployeeSchema = z.object({
     body: z.object({
         name: z.string({ required_error: 'Name is required' }),
+        employeeId: z.string({ required_error: 'Employee ID is required' }),
         email: z.string({ required_error: 'Email is required' }).email('Invalid email address'),
         contact: z.string().optional(),
         department: z.string().optional(),
@@ -19,6 +20,7 @@ const updateEmployeeSchema = z.object({
     }),
     body: z.object({
         name: z.string().optional(),
+        employeeId: z.string().optional(),
         email: z.string().email().optional(),
         contact: z.string().optional(),
         department: z.string().optional(),
